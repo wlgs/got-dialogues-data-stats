@@ -1,0 +1,19 @@
+---
+title: "r-project"
+output: html_notebook
+---
+```{r}
+install.packages("Rtools")
+writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"', con = "~/.Renviron")
+install.packages("RSQLServer")
+library("RSQLServer")
+```
+
+Źródło danych: https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv
+
+
+ile znakow miala wypowiedz
+
+```{r}
+con <- dbConnect(drv=RSQLite::SQLite(), dbname="data/db-got-dataset.db")
+```
