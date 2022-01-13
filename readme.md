@@ -4,5 +4,6 @@ This repository is a project made as an assignment in the Probability and Statis
 
 ## Sources
 
-* Main data - [kaggle.com/gopinath15/gameofthrones](https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv])
-* RSQL Library - [cran.r-project.org/web/packages/RSQL](https://cran.r-project.org/web/packages/RSQL/index.html)
+* [Dataset](https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv])
+* [RSQL Library](https://cran.r-project.org/web/packages/RSQL/index.html)
+* [SQLite](https://www.sqlite.org/)
