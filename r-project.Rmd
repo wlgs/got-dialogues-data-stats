@@ -9,9 +9,6 @@ install.packages("RSQLServer")
 library("RSQLServer")
 ```
 
-Źródło danych: https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv
-
-
 ile znakow miala wypowiedz
 
 ```{r}
