@@ -1,5 +1,5 @@
-## Game of Thrones dialogues stats throughout the episodes shown with plots
-This repo is a project made as an assignment in the Probability and Statistics course 21/22 at UST AGH.
+## Game of Thrones dialogues stats throughout the episodes
+This repository is a project made as an assignment in the Probability and Statistics course 2021/22 at UST AGH.
 
 
 ## Sources
