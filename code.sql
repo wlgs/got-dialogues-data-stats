@@ -28,7 +28,7 @@ HAVING COUNT(*)=1)
 -- W bazie danych pojawiają się wpisy typu Speaker='Roose' oraz Speaker='ROOSE', dlatego trzymamy się jednej wersji:
 UPDATE [got-dataset]
 SET 
-    Speaker = LOWER(Speaker);
+    Speaker = UPPER(Speaker);
 -- [17:47:42] Query finished in 0.042 second(s). Rows affected: 24459
 
 SELECT Season, COUNT(*)

@@ -1,16 +1,78 @@
 ---
 title: "r-project"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
+
+Importujemy pakiet DBI by łączyć się z bazą danych SQLite.
 ```{r}
-install.packages("Rtools")
-writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"', con = "~/.Renviron")
-install.packages("RSQLServer")
-library("RSQLServer")
+library(DBI)
 ```
 
-ile znakow miala wypowiedz
-
+Łączymy się z bazą danych "got-dataset.db"
 ```{r}
-con <- dbConnect(drv=RSQLite::SQLite(), dbname="data/db-got-dataset.db")
+con <- dbConnect(drv=RSQLite::SQLite(), dbname="data/got-dataset.db")
+print(con)
+```
+
+Sprawdzamy jakie tabele zawiera baza danych.
+```{r}
+dbListTables(con)
+```
+
+Przystępujemy do procesu czyszczenia danych.
+Interesują nas dialogi wypowiedziane tylko przez postacie w serialu (wpis Speaker nie może być pusty).
+```{r}
+query <- "DELETE
+FROM [got-dialogues]
+WHERE SPEAKER = ''"
+res <- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)
+```
+
+Usuwamy dialogi postaci w tle, przedstawianych jako np. Woman #4
+```{r}
+query <- "DELETE
+FROM [got-dialogues]
+WHERE Speaker LIKE '%#%'"
+res <- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)
+```
+
+Usuwamy wspólne dialogi, dotyczy pozycji typu 'ALL TOGETHER', 'ALL THREE', 'ALL AT THE BACK'.
+```{r}
+query <- "DELETE
+FROM [got-dialogues]
+WHERE Speaker LIKE '%ALL%'"
+res <- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)
+```
+
+
+Usuwamy pojedyncze, mało znaczące wypowiedzi.
+```{r}
+query <- "DELETE
+FROM [got-dialogues]
+where Speaker in (SELECT Speaker
+FROM [got-dialogues]
+GROUP BY Speaker
+HAVING COUNT(*)=1)"
+res <- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)
+```
+
+
+W bazie danych pojawiają się wpisy typu Speaker='Roose' oraz Speaker='ROOSE', dlatego trzymamy się jednej wersji (UPPER)
+```{r}
+query <- "UPDATE [got-dialogues]
+SET 
+    Speaker = UPPER(Speaker)"
+res <- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)
 ```

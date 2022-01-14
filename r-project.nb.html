@@ -215,63 +215,111 @@ pre code {
 
 
 <!-- rnb-text-begin -->
+<p>Importujemy pakiet DBI by łączyć się z bazą danych SQLite.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5zdGFsbC5wYWNrYWdlcyhcIlJ0b29sc1wiKVxuYGBgIn0= -->
-<pre class="r"><code>install.packages(&quot;Rtools&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShEQkkpXG5gYGAifQ== -->
+<pre class="r"><code>library(DBI)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV0FSTklORzogUnRvb2xzIGlzIHJlcXVpcmVkIHRvIGJ1aWxkIFIgcGFja2FnZXMgYnV0IGlzIG5vdCBjdXJyZW50bHkgaW5zdGFsbGVkLiBQbGVhc2UgZG93bmxvYWQgYW5kIGluc3RhbGwgdGhlIGFwcHJvcHJpYXRlIHZlcnNpb24gb2YgUnRvb2xzIGJlZm9yZSBwcm9jZWVkaW5nOlxuXG5odHRwczovL2NyYW4ucnN0dWRpby5jb20vYmluL3dpbmRvd3MvUnRvb2xzL1xuSW5zdGFsbGluZyBwYWNrYWdlIGludG8g4oCYQzovVXNlcnMvV0xHUy9Eb2N1bWVudHMvUi93aW4tbGlicmFyeS80LjHigJlcbihhcyDigJhsaWLigJkgaXMgdW5zcGVjaWZpZWQpXG4ifQ== -->
-<pre><code>WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
-
-https://cran.rstudio.com/bin/windows/Rtools/
-Installing package into ‘C:/Users/WLGS/Documents/R/win-library/4.1’
-(as ‘lib’ is unspecified)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZyBpbiBpbnN0YWxsLnBhY2thZ2VzIDpcbiAgcGFja2FnZSDigJhSdG9vbHPigJkgaXMgbm90IGF2YWlsYWJsZSBmb3IgdGhpcyB2ZXJzaW9uIG9mIFJcblxuQSB2ZXJzaW9uIG9mIHRoaXMgcGFja2FnZSBmb3IgeW91ciB2ZXJzaW9uIG9mIFIgbWlnaHQgYmUgYXZhaWxhYmxlIGVsc2V3aGVyZSxcbnNlZSB0aGUgaWRlYXMgYXRcbmh0dHBzOi8vY3Jhbi5yLXByb2plY3Qub3JnL2RvYy9tYW51YWxzL3ItcGF0Y2hlZC9SLWFkbWluLmh0bWwjSW5zdGFsbGluZy1wYWNrYWdlc1xuIn0= -->
-<pre><code>Warning in install.packages :
-  package ‘Rtools’ is not available for this version of R
-
-A version of this package for your version of R might be available elsewhere,
-see the ideas at
-https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVMaW5lcygnUEFUSD1cIiR7UlRPT0xTNDBfSE9NRX1cXFxcdXNyXFxcXGJpbjske1BBVEh9XCInLCBjb24gPSBcIn4vLlJlbnZpcm9uXCIpXG5pbnN0YWxsLnBhY2thZ2VzKFwiUlNRTFNlcnZlclwiKVxuYGBgIn0= -->
-<pre class="r"><code>writeLines(&#39;PATH=&quot;${RTOOLS40_HOME}\\usr\\bin;${PATH}&quot;&#39;, con = &quot;~/.Renviron&quot;)
-install.packages(&quot;RSQLServer&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV0FSTklORzogUnRvb2xzIGlzIHJlcXVpcmVkIHRvIGJ1aWxkIFIgcGFja2FnZXMgYnV0IGlzIG5vdCBjdXJyZW50bHkgaW5zdGFsbGVkLiBQbGVhc2UgZG93bmxvYWQgYW5kIGluc3RhbGwgdGhlIGFwcHJvcHJpYXRlIHZlcnNpb24gb2YgUnRvb2xzIGJlZm9yZSBwcm9jZWVkaW5nOlxuXG5odHRwczovL2NyYW4ucnN0dWRpby5jb20vYmluL3dpbmRvd3MvUnRvb2xzL1xuSW5zdGFsbGluZyBwYWNrYWdlIGludG8g4oCYQzovVXNlcnMvV0xHUy9Eb2N1bWVudHMvUi93aW4tbGlicmFyeS80LjHigJlcbihhcyDigJhsaWLigJkgaXMgdW5zcGVjaWZpZWQpXG4ifQ== -->
-<pre><code>WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
-
-https://cran.rstudio.com/bin/windows/Rtools/
-Installing package into ‘C:/Users/WLGS/Documents/R/win-library/4.1’
-(as ‘lib’ is unspecified)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZyBpbiBpbnN0YWxsLnBhY2thZ2VzIDpcbiAgcGFja2FnZSDigJhSU1FMU2VydmVy4oCZIGlzIG5vdCBhdmFpbGFibGUgZm9yIHRoaXMgdmVyc2lvbiBvZiBSXG5cbkEgdmVyc2lvbiBvZiB0aGlzIHBhY2thZ2UgZm9yIHlvdXIgdmVyc2lvbiBvZiBSIG1pZ2h0IGJlIGF2YWlsYWJsZSBlbHNld2hlcmUsXG5zZWUgdGhlIGlkZWFzIGF0XG5odHRwczovL2NyYW4uci1wcm9qZWN0Lm9yZy9kb2MvbWFudWFscy9yLXBhdGNoZWQvUi1hZG1pbi5odG1sI0luc3RhbGxpbmctcGFja2FnZXNcbiJ9 -->
-<pre><code>Warning in install.packages :
-  package ‘RSQLServer’ is not available for this version of R
-
-A version of this package for your version of R might be available elsewhere,
-see the ideas at
-https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShcIlJTUUxTZXJ2ZXJcIilcbmBgYCJ9 -->
-<pre class="r"><code>library(&quot;RSQLServer&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gbGlicmFyeShcIlJTUUxTZXJ2ZXJcIikgOiB0aGVyZSBpcyBubyBwYWNrYWdlIGNhbGxlZCDigJhSU1FMU2VydmVy4oCZXG4ifQ== -->
-<pre><code>Error in library(&quot;RSQLServer&quot;) : there is no package called ‘RSQLServer’</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogcGFja2FnZSDigJhEQknigJkgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiA0LjEuMlxuIn0= -->
+<pre><code>Warning: package ‘DBI’ was built under R version 4.1.2</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Źródło danych: <a href="https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv" class="uri">https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv</a></p>
-<p>ile znakow miala wypowiedz</p>
+<p>Łączymy się z bazą danych “got-dataset.db”</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uIDwtIGRiQ29ubmVjdChkcnY9UlNRTGl0ZTo6U1FMaXRlKCksIGRibmFtZT1cImRhdGEvZGItZ290LWRhdGFzZXQuZGJcIilcbmBgYCJ9 -->
-<pre class="r"><code>con &lt;- dbConnect(drv=RSQLite::SQLite(), dbname=&quot;data/db-got-dataset.db&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uIDwtIGRiQ29ubmVjdChkcnY9UlNRTGl0ZTo6U1FMaXRlKCksIGRibmFtZT1cImRhdGEvZ290LWRhdGFzZXQuZGJcIilcbnByaW50KGNvbilcbmBgYCJ9 -->
+<pre class="r"><code>con &lt;- dbConnect(drv=RSQLite::SQLite(), dbname=&quot;data/got-dataset.db&quot;)
+print(con)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiPFNRTGl0ZUNvbm5lY3Rpb24+XG4gIFBhdGg6IEM6XFxVc2Vyc1xcV0xHU1xcRG9jdW1lbnRzXFxHaXRIdWJcXGdvdC1kaWFsb2d1ZXMtZGF0YS1zdGF0c1xcZGF0YVxcZ290LWRhdGFzZXQuZGJcbiAgRXh0ZW5zaW9uczogVFJVRVxuIn0= -->
+<pre><code>&lt;SQLiteConnection&gt;
+  Path: C:\Users\WLGS\Documents\GitHub\got-dialogues-data-stats\data\got-dataset.db
+  Extensions: TRUE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Sprawdzamy jakie tabele zawiera baza danych.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGJMaXN0VGFibGVzKGNvbilcbmBgYCJ9 -->
+<pre class="r"><code>dbListTables(con)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiZ290LWRpYWxvZ3Vlc1wiXG4ifQ== -->
+<pre><code>[1] &quot;got-dialogues&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Przystępujemy do procesu czyszczenia danych. Interesują nas dialogi wypowiedziane tylko przez postacie w serialu (wpis Speaker nie może być pusty).</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucXVlcnkgPC0gXCJERUxFVEVcbkZST00gW2dvdC1kaWFsb2d1ZXNdXG5XSEVSRSBTUEVBS0VSID0gJydcIlxucmVzIDwtIGRiU2VuZFN0YXRlbWVudChjb24sIHF1ZXJ5KVxuZGJHZXRSb3dzQWZmZWN0ZWQocmVzKVxuZGJDbGVhclJlc3VsdChyZXMpXG5gYGAifQ== -->
+<pre class="r"><code>query &lt;- &quot;DELETE
+FROM [got-dialogues]
+WHERE SPEAKER = &#39;&#39;&quot;
+res &lt;- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Usuwamy dialogi postaci w tle, przedstawianych jako np. Woman #4</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucXVlcnkgPC0gXCJERUxFVEVcbkZST00gW2dvdC1kaWFsb2d1ZXNdXG5XSEVSRSBTcGVha2VyIExJS0UgJyUjJSdcIlxucmVzIDwtIGRiU2VuZFN0YXRlbWVudChjb24sIHF1ZXJ5KVxuZGJHZXRSb3dzQWZmZWN0ZWQocmVzKVxuZGJDbGVhclJlc3VsdChyZXMpXG5gYGAifQ== -->
+<pre class="r"><code>query &lt;- &quot;DELETE
+FROM [got-dialogues]
+WHERE Speaker LIKE &#39;%#%&#39;&quot;
+res &lt;- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Usuwamy wspólne dialogi, dotyczy pozycji typu ‘ALL TOGETHER’, ‘ALL THREE’, ‘ALL AT THE BACK’.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucXVlcnkgPC0gXCJERUxFVEVcbkZST00gW2dvdC1kaWFsb2d1ZXNdXG5XSEVSRSBTcGVha2VyIExJS0UgJyVBTEwlJ1wiXG5yZXMgPC0gZGJTZW5kU3RhdGVtZW50KGNvbiwgcXVlcnkpXG5kYkdldFJvd3NBZmZlY3RlZChyZXMpXG5kYkNsZWFyUmVzdWx0KHJlcylcbmBgYCJ9 -->
+<pre class="r"><code>query &lt;- &quot;DELETE
+FROM [got-dialogues]
+WHERE Speaker LIKE &#39;%ALL%&#39;&quot;
+res &lt;- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Usuwamy pojedyncze, mało znaczące wypowiedzi.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucXVlcnkgPC0gXCJERUxFVEVcbkZST00gW2dvdC1kaWFsb2d1ZXNdXG53aGVyZSBTcGVha2VyIGluIChTRUxFQ1QgU3BlYWtlclxuRlJPTSBbZ290LWRpYWxvZ3Vlc11cbkdST1VQIEJZIFNwZWFrZXJcbkhBVklORyBDT1VOVCgqKT0xKVwiXG5yZXMgPC0gZGJTZW5kU3RhdGVtZW50KGNvbiwgcXVlcnkpXG5kYkdldFJvd3NBZmZlY3RlZChyZXMpXG5kYkNsZWFyUmVzdWx0KHJlcylcbmBgYCJ9 -->
+<pre class="r"><code>query &lt;- &quot;DELETE
+FROM [got-dialogues]
+where Speaker in (SELECT Speaker
+FROM [got-dialogues]
+GROUP BY Speaker
+HAVING COUNT(*)=1)&quot;
+res &lt;- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>W bazie danych pojawiają się wpisy typu Speaker=‘Roose’ oraz Speaker=‘ROOSE’, dlatego trzymamy się jednej wersji (UPPER)</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucXVlcnkgPC0gXCJVUERBVEUgW2dvdC1kaWFsb2d1ZXNdXG5TRVQgXG4gICAgU3BlYWtlciA9IFVQUEVSKFNwZWFrZXIpXCJcbnJlcyA8LSBkYlNlbmRTdGF0ZW1lbnQoY29uLCBxdWVyeSlcbmRiR2V0Um93c0FmZmVjdGVkKHJlcylcbmRiQ2xlYXJSZXN1bHQocmVzKVxuYGBgIn0= -->
+<pre class="r"><code>query &lt;- &quot;UPDATE [got-dialogues]
+SET 
+    Speaker = UPPER(Speaker)&quot;
+res &lt;- dbSendStatement(con, query)
+dbGetRowsAffected(res)
+dbClearResult(res)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogInItcHJvamVjdCINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQpgYGB7cn0NCmluc3RhbGwucGFja2FnZXMoIlJ0b29scyIpDQp3cml0ZUxpbmVzKCdQQVRIPSIke1JUT09MUzQwX0hPTUV9XFx1c3JcXGJpbjske1BBVEh9IicsIGNvbiA9ICJ+Ly5SZW52aXJvbiIpDQppbnN0YWxsLnBhY2thZ2VzKCJSU1FMU2VydmVyIikNCmxpYnJhcnkoIlJTUUxTZXJ2ZXIiKQ0KYGBgDQoNCsW5csOzZMWCbyBkYW55Y2g6IGh0dHBzOi8vd3d3LmthZ2dsZS5jb20vZ29waW5hdGgxNS9nYW1lb2Z0aHJvbmVzP3NlbGVjdD1nYW1lLW9mLXRocm9uZXMuY3N2DQoNCg0KaWxlIHpuYWtvdyBtaWFsYSB3eXBvd2llZHoNCg0KYGBge3J9DQpjb24gPC0gZGJDb25uZWN0KGRydj1SU1FMaXRlOjpTUUxpdGUoKSwgZGJuYW1lPSJkYXRhL2RiLWdvdC1kYXRhc2V0LmRiIikNCmBgYA==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogInItcHJvamVjdCINCm91dHB1dDoNCiAgcGRmX2RvY3VtZW50OiBkZWZhdWx0DQogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQNCi0tLQ0KDQpJbXBvcnR1amVteSBwYWtpZXQgREJJIGJ5IMWCxIVjennEhyBzacSZIHogYmF6xIUgZGFueWNoIFNRTGl0ZS4NCmBgYHtyfQ0KbGlicmFyeShEQkkpDQpgYGANCg0KxYHEhWN6eW15IHNpxJkgeiBiYXrEhSBkYW55Y2ggImdvdC1kYXRhc2V0LmRiIg0KYGBge3J9DQpjb24gPC0gZGJDb25uZWN0KGRydj1SU1FMaXRlOjpTUUxpdGUoKSwgZGJuYW1lPSJkYXRhL2dvdC1kYXRhc2V0LmRiIikNCnByaW50KGNvbikNCmBgYA0KDQpTcHJhd2R6YW15IGpha2llIHRhYmVsZSB6YXdpZXJhIGJhemEgZGFueWNoLg0KYGBge3J9DQpkYkxpc3RUYWJsZXMoY29uKQ0KYGBgDQoNClByenlzdMSZcHVqZW15IGRvIHByb2Nlc3UgY3p5c3pjemVuaWEgZGFueWNoLg0KSW50ZXJlc3VqxIUgbmFzIGRpYWxvZ2kgd3lwb3dpZWR6aWFuZSB0eWxrbyBwcnpleiBwb3N0YWNpZSB3IHNlcmlhbHUgKHdwaXMgU3BlYWtlciBuaWUgbW/FvGUgYnnEhyBwdXN0eSkuDQpgYGB7cn0NCnF1ZXJ5IDwtICJERUxFVEUNCkZST00gW2dvdC1kaWFsb2d1ZXNdDQpXSEVSRSBTUEVBS0VSID0gJyciDQpyZXMgPC0gZGJTZW5kU3RhdGVtZW50KGNvbiwgcXVlcnkpDQpkYkdldFJvd3NBZmZlY3RlZChyZXMpDQpkYkNsZWFyUmVzdWx0KHJlcykNCmBgYA0KDQpVc3V3YW15IGRpYWxvZ2kgcG9zdGFjaSB3IHRsZSwgcHJ6ZWRzdGF3aWFueWNoIGpha28gbnAuIFdvbWFuICM0DQpgYGB7cn0NCnF1ZXJ5IDwtICJERUxFVEUNCkZST00gW2dvdC1kaWFsb2d1ZXNdDQpXSEVSRSBTcGVha2VyIExJS0UgJyUjJSciDQpyZXMgPC0gZGJTZW5kU3RhdGVtZW50KGNvbiwgcXVlcnkpDQpkYkdldFJvd3NBZmZlY3RlZChyZXMpDQpkYkNsZWFyUmVzdWx0KHJlcykNCmBgYA0KDQpVc3V3YW15IHdzcMOzbG5lIGRpYWxvZ2ksIGRvdHljenkgcG96eWNqaSB0eXB1ICdBTEwgVE9HRVRIRVInLCAnQUxMIFRIUkVFJywgJ0FMTCBBVCBUSEUgQkFDSycuDQpgYGB7cn0NCnF1ZXJ5IDwtICJERUxFVEUNCkZST00gW2dvdC1kaWFsb2d1ZXNdDQpXSEVSRSBTcGVha2VyIExJS0UgJyVBTEwlJyINCnJlcyA8LSBkYlNlbmRTdGF0ZW1lbnQoY29uLCBxdWVyeSkNCmRiR2V0Um93c0FmZmVjdGVkKHJlcykNCmRiQ2xlYXJSZXN1bHQocmVzKQ0KYGBgDQoNCg0KVXN1d2FteSBwb2plZHluY3plLCBtYcWCbyB6bmFjesSFY2Ugd3lwb3dpZWR6aS4NCmBgYHtyfQ0KcXVlcnkgPC0gIkRFTEVURQ0KRlJPTSBbZ290LWRpYWxvZ3Vlc10NCndoZXJlIFNwZWFrZXIgaW4gKFNFTEVDVCBTcGVha2VyDQpGUk9NIFtnb3QtZGlhbG9ndWVzXQ0KR1JPVVAgQlkgU3BlYWtlcg0KSEFWSU5HIENPVU5UKCopPTEpIg0KcmVzIDwtIGRiU2VuZFN0YXRlbWVudChjb24sIHF1ZXJ5KQ0KZGJHZXRSb3dzQWZmZWN0ZWQocmVzKQ0KZGJDbGVhclJlc3VsdChyZXMpDQpgYGANCg0KDQpXIGJhemllIGRhbnljaCBwb2phd2lhasSFIHNpxJkgd3Bpc3kgdHlwdSBTcGVha2VyPSdSb29zZScgb3JheiBTcGVha2VyPSdST09TRScsIGRsYXRlZ28gdHJ6eW1hbXkgc2nEmSBqZWRuZWogd2Vyc2ppIChVUFBFUikNCmBgYHtyfQ0KcXVlcnkgPC0gIlVQREFURSBbZ290LWRpYWxvZ3Vlc10NClNFVCANCiAgICBTcGVha2VyID0gVVBQRVIoU3BlYWtlcikiDQpyZXMgPC0gZGJTZW5kU3RhdGVtZW50KGNvbiwgcXVlcnkpDQpkYkdldFJvd3NBZmZlY3RlZChyZXMpDQpkYkNsZWFyUmVzdWx0KHJlcykNCmBgYA0K</div>
 
 
 
