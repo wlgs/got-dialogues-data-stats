@@ -76,3 +76,10 @@ res <- dbSendStatement(con, query)
 dbGetRowsAffected(res)
 dbClearResult(res)
 ```
+
+
+Po przeczyszczeniu przykładowe wpisy w bazie wyglądają następująco (Text ograniczony do 20 znaków, by zwiększyć czytelność).
+```{r}
+query <- "SELECT substr(Text,1,20)||'...' as 'Text', Speaker, Episode, Season, Show FROM [got-dialogues] LIMIT 5"
+dbGetQuery(con, query)
+```
