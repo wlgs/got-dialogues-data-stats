@@ -1,9 +1,22 @@
 ---
-title: "r-project"
+title: "Analiza statystyczna danych dialogowych z serialu Gra o tron"
+author: "Mikołaj Wielgos"
+email: wielgos@student.agh.edu.pl
 output:
   pdf_document: default
   html_notebook: default
+params:
+  doc_title: "Analiza statystyczna danych dialogowych z serialu Gra o tron"
 ---
+# Wstęp
+
+Projekt na przedmiot Rachunek prawdopodobieństwa i statystyka 2021/22. 
+
+Obejmuje on analizę statystyczną serialu *[Gra o tron](https://en.wikipedia.org/wiki/Game_of_Thrones)*
+
+Źródło danych opracowywanych  *[www.kaggle.com/gopinath15/gameofthrones](https://www.kaggle.com/gopinath15/gameofthrones)*
+
+# Sekcja czyszczenia danych
 
 Importujemy pakiet DBI by łączyć się z bazą danych SQLite.
 ```{r}
@@ -13,18 +26,29 @@ library(DBI)
 Łączymy się z bazą danych "got-dataset.db"
 ```{r}
 con <- dbConnect(drv=RSQLite::SQLite(), dbname="data/got-dataset.db")
-print(con)
 ```
+
 
 Sprawdzamy jakie tabele zawiera baza danych.
 ```{r}
 dbListTables(con)
 ```
 
-Przystępujemy do procesu czyszczenia danych.
+
 Interesują nas dialogi wypowiedziane tylko przez postacie w serialu (wpis Speaker nie może być pusty).
+Przykładowy błędny wiersz
 ```{r}
-query <- "DELETE
+query <- "
+SELECT Text, Speaker, Episode, Season 
+FROM [got-dialogues] 
+WHERE Speaker=''
+LIMIT 1"
+dbGetQuery(con, query)
+```
+Kwerenda usuwająca wiersze (wraz z informacją o ilości usuniętych)
+```{r}
+query <- "
+DELETE
 FROM [got-dialogues]
 WHERE SPEAKER = ''"
 res <- dbSendStatement(con, query)
@@ -32,9 +56,21 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
+
 Usuwamy dialogi postaci w tle, przedstawianych jako np. Woman #4
+Przykładowy błędny wiersz
 ```{r}
-query <- "DELETE
+query <- "
+SELECT Text, Speaker, Episode, Season 
+FROM [got-dialogues]
+WHERE Speaker LIKE '%#%'
+LIMIT 1"
+dbGetQuery(con, query)
+```
+Kwerenda usuwająca wiersze (wraz z informacją o ilości usuniętych)
+```{r}
+query <- "
+DELETE
 FROM [got-dialogues]
 WHERE Speaker LIKE '%#%'"
 res <- dbSendStatement(con, query)
@@ -42,9 +78,21 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
+
 Usuwamy wspólne dialogi, dotyczy pozycji typu 'ALL TOGETHER', 'ALL THREE', 'ALL AT THE BACK'.
+Przykładowy błędny wiersz
 ```{r}
-query <- "DELETE
+query <- "
+SELECT Text, Speaker, Episode, Season 
+FROM [got-dialogues]
+WHERE Speaker LIKE '%ALL%' 
+LIMIT 1"
+dbGetQuery(con, query)
+```
+Kwerenda usuwająca wiersze (wraz z informacją o ilości usuniętych)
+```{r}
+query <- "
+DELETE
 FROM [got-dialogues]
 WHERE Speaker LIKE '%ALL%'"
 res <- dbSendStatement(con, query)
@@ -54,8 +102,20 @@ dbClearResult(res)
 
 
 Usuwamy pojedyncze, mało znaczące wypowiedzi.
+Przykładowy błędny wiersz
 ```{r}
-query <- "DELETE
+query <- "
+SELECT Text, Speaker, Episode, Season 
+FROM [got-dialogues]
+GROUP BY Speaker
+HAVING COUNT(*)=1
+LIMIT 1"
+dbGetQuery(con, query)
+```
+Kwerenda usuwająca wiersze (wraz z informacją o ilości usuniętych)
+```{r}
+query <- "
+DELETE
 FROM [got-dialogues]
 where Speaker in (SELECT Speaker
 FROM [got-dialogues]
@@ -67,19 +127,22 @@ dbClearResult(res)
 ```
 
 
-W bazie danych pojawiają się wpisy typu Speaker='Roose' oraz Speaker='ROOSE', dlatego trzymamy się jednej wersji (UPPER)
+W bazie danych pojawiają się wpisy typu Speaker='Roose' oraz Speaker='ROOSE', dlatego trzymamy się jednej wersji (WIELKIE LITERY)
 ```{r}
-query <- "UPDATE [got-dialogues]
-SET 
-    Speaker = UPPER(Speaker)"
+query <- "
+UPDATE [got-dialogues]
+SET Speaker = UPPER(Speaker)"
 res <- dbSendStatement(con, query)
 dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
 
-Po przeczyszczeniu przykładowe wpisy w bazie wyglądają następująco (Text ograniczony do 20 znaków, by zwiększyć czytelność).
+Po przeczyszczeniu przykładowe wpisy w bazie wyglądają następująco (kolumna 'Text' ograniczona do 20 znaków, by zwiększyć czytelność).
 ```{r}
-query <- "SELECT substr(Text,1,20)||'...' as 'Text', Speaker, Episode, Season, Show FROM [got-dialogues] LIMIT 5"
+query <- "
+SELECT substr(Text,1,20)||'...' as 'Text', Speaker, Episode, Season
+FROM [got-dialogues]
+LIMIT 5"
 dbGetQuery(con, query)
 ```
