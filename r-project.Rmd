@@ -22,9 +22,9 @@ Obejmuje on analizę statystyczną wszystkich kwestii bohaterów w serialu *[Gra
 
 Źródło danych opracowywanych  *[www.kaggle.com/gopinath15/gameofthrones](https://www.kaggle.com/gopinath15/gameofthrones)*
 
-# Czyszczenie danych
+# Początek
 
-Importujemy pakiet DBI by łączyć się z bazą danych SQLite.
+Importuję potrzebne pakiety
 ```{r}
 library(DBI)
 library(dbplot)
@@ -32,29 +32,33 @@ library(dplyr)
 library(ggplot2)
 ```
 
-Łączymy się z bazą danych "got-dataset.db"
+Łączę się z bazą danych "got-dataset.db"
 ```{r}
 con <- dbConnect(drv=RSQLite::SQLite(), dbname="data/got-dataset.db")
 ```
 
-
-Sprawdzamy jakie tabele zawiera baza danych.
+Sprawdzam jakie tabele zawiera baza danych
 ```{r}
 dbListTables(con)
 ```
+
+# Czyszczenie danych
 
 ## Puste pola 'Speaker'
 Interesują nas kwestie wypowiedziane tylko przez postacie w serialu (wpis Speaker nie może być pusty).
 Przykładowy błędny wiersz
 ```{r}
 query <- "
-SELECT Text, Speaker, Episode, Season 
+SELECT substr(Text,1,20)||'...'as 'Text',
+Speaker,
+Episode,
+Season 
 FROM [got-dialogues] 
 WHERE Speaker=''
 LIMIT 1"
 dbGetQuery(con, query)
 ```
-Kwerenda usuwająca wiersze (wraz z informacją o ilości usuniętych)
+Kwerenda usuwająca wiersze
 ```{r}
 query <- "
 DELETE
@@ -73,7 +77,10 @@ Usuwamy kwestie postaci w tle, przedstawianych jako np. Woman #4
 Przykładowy błędny wiersz
 ```{r}
 query <- "
-SELECT Text, Speaker, Episode, Season 
+SELECT substr(Text,1,20)||'...'as 'Text',
+Speaker,
+Episode,
+Season 
 FROM [got-dialogues]
 WHERE Speaker LIKE '%#%'
 LIMIT 1"
@@ -94,11 +101,14 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 ## Wspólne kwestie
-Usuwamy wspólne kwestie, dotyczy pozycji typu 'ALL TOGETHER', 'ALL THREE', 'ALL AT THE BACK'.
+Usuwamy wspólne kwestie, dotyczy pozycji typu 'ALL TOGETHER', 'ALL THREE', 'ALL AT THE BACK'
 Przykładowy błędny wiersz
 ```{r}
 query <- "
-SELECT Text, Speaker, Episode, Season 
+SELECT substr(Text,1,20)||'...'as 'Text',
+Speaker,
+Episode,
+Season 
 FROM [got-dialogues]
 WHERE Speaker LIKE '%ALL%' 
 LIMIT 1"
@@ -119,11 +129,17 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 ## Nieznaczące wypowiedzi
-Usuwamy pojedyncze, mało znaczące wypowiedzi.
+
+Usuwamy pojedyncze, mało znaczące wypowiedzi
+
+
 Przykładowy błędny wiersz
 ```{r}
 query <- "
-SELECT Text, Speaker, Episode, Season 
+SELECT substr(Text,1,20)||'...' as 'Text',
+Speaker,
+Episode,
+Season 
 FROM [got-dialogues]
 GROUP BY Speaker
 HAVING COUNT(*)=1
@@ -158,10 +174,13 @@ dbClearResult(res)
 ```
 
 ## Podsumowanie i przykładowe dane
-Po przeczyszczeniu przykładowe wpisy w bazie wyglądają następująco (kolumna 'Text' ograniczona do 20 znaków, by zwiększyć czytelność).
+Po przeczyszczeniu przykładowe wpisy w bazie wyglądają następująco (kolumna 'Text' ograniczona do 20 znaków, by zwiększyć czytelność)
 ```{r}
 query <- "
-SELECT substr(Text,1,20)||'...' as 'Text', Speaker, Episode, Season
+SELECT substr(Text,1,20)||'...' as 'Text',
+Speaker,
+Episode,
+Season
 FROM [got-dialogues]
 LIMIT 5"
 dbGetQuery(con, query)
@@ -172,7 +191,8 @@ dbGetQuery(con, query)
 ## Ilość dialogów w poszczególnych sezonach
 ```{r}
 df <- dbGetQuery(con,"
-SELECT Season, COUNT(*)
+SELECT Season,
+COUNT(*)
 FROM [got-dialogues]
 GROUP BY Season")
 ggplot(data=df, aes(x = df[,1], y=df[,2])) +
@@ -197,7 +217,8 @@ summary(df[,2])
 
 ```{r}
 df <- dbGetQuery(con,"
-SELECT Speaker, COUNT(*)
+SELECT Speaker,
+COUNT(*)
 FROM [got-dialogues]
 GROUP BY Speaker
 ORDER BY 2 DESC
@@ -212,7 +233,8 @@ ggplot(data=df, aes(x = df[,1], y=df[,2])) +
 By policzyć wskaźniki wszystkich bohaterów, ponownie wybieram dane (tym razem bez limitu)
 ```{r}
 df <- dbGetQuery(con,"
-SELECT Speaker, COUNT(*)
+SELECT Speaker,
+COUNT(*)
 FROM [got-dialogues]
 GROUP BY Speaker")
 ```
@@ -231,11 +253,14 @@ summary(df[,2])
 
 ```{r}
 df <- dbGetQuery(con,"
-SELECT Season,length(Text)
+SELECT Season,
+length(Text)
 FROM [got-dialogues]")
 ggplot(data=df, aes(x = df[,1], y=df[,2])) +
   geom_jitter(size = 0.1, position = position_jitter(0.45), color="blue") +
-  labs(x="", y="Długość kwestii [znaki]", caption="(Kropka odpowiada pojedynczej wypowiedzianej kwestii)") +
+  labs(x="",
+       y="Długość kwestii [znaki]",
+       caption="(Kropka odpowiada pojedynczej wypowiedzianej kwestii)") +
   theme_minimal()
 ```
 Wskaźniki:
@@ -296,7 +321,8 @@ Do regresji nie wliczam sezonu 1, w którym wartości dialogów nie układają s
 Punkty na których obliczę wyglądają następująco:
 ```{r}
 df <- dbGetQuery(con,"
-SELECT Season, COUNT(*)
+SELECT Season,
+COUNT(*)
 FROM [got-dialogues]
 WHERE Season !='season-01'
 GROUP BY Season")
@@ -314,7 +340,8 @@ ggplot(data=df, aes(x = df[,1], y=df[,2])) +
 Tworzę model
 ```{r}
 df <- dbGetQuery(con,"
-SELECT substr(Season,9,10), COUNT(*)
+SELECT substr(Season,9,10),
+COUNT(*)
 FROM [got-dialogues]
 WHERE Season !='season-01'
 GROUP BY Season")
@@ -331,11 +358,20 @@ summary(model_lm)
 ## Wykres regresji liniowej
 ```{r}
 ggplot(df_lm, aes(x)) +
-  stat_function(fun=function(x) coefficients(model_lm)[1]+x*(coefficients(model_lm)[2]), color='turquoise4') +
-  scale_x_continuous("sezon", labels = as.character(df_lm$x), breaks = df_lm$x, limits=c(2,12))+
+  stat_function(
+    fun=function(x) coefficients(model_lm)[1]+x*(coefficients(model_lm)[2]),
+    color='turquoise4') +
+  scale_x_continuous(
+    "sezon",
+    labels = as.character(df_lm$x),
+    breaks = df_lm$x,
+    limits=c(2,12))+
   scale_y_continuous(name="Ilość kwestii", limits=c(0, 4500)) +
-  labs(title="Regresja liniowa ilości kwestii w poszczególnych sezonach (wraz z predykcją)",caption=paste("równanie regresji liniowej: y=",coefficients(model_lm)[2],"x + ",coefficients(model_lm)[1]))
-
+  labs(title="Regresja liniowa ilości kwestii w
+       poszczególnych sezonach (wraz z predykcją)",
+       caption=paste("równanie regresji liniowej: y=",
+                     coefficients(model_lm)[2],"x + ",
+                     coefficients(model_lm)[1]))
 ```
 
 Obliczam punkt przecięcia z osią OX.
@@ -355,7 +391,7 @@ unlink("data/got-dataset.db")
 
 # Podsumowanie
 
-Choć wybrałem dane proste, bo przecież to tylko kwestie bohaterów, można było dowiedzieć się z nich całkiem sporo. Wniosek po krótce jest taki, że od sezonu 2 Gry o tron, bohaterowie co raz bardziej nie lubią się wypowiadać. Dodatkowo w sezonie 2 padł rekord pod względem długości kwestii (ponad 1500 znaków w pojedynczej wypowiedzi)
+Choć wybrałem dane proste, bo przecież to tylko kwestie bohaterów, można było dowiedzieć się z nich całkiem sporo. Wniosek po krótce jest taki, że od sezonu 2 Gry o tron, bohaterowie co raz bardziej nie lubią się wypowiadać. Dodatkowo w sezonie 2 padł rekord pod względem długości kwestii (ponad 1500 znaków w pojedynczej wypowiedzi).
 
 
 
