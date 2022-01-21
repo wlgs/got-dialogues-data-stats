@@ -1,7 +1,11 @@
-## Game of Thrones dialogues stats throughout the episodes
+# Game of Thrones dialogues stats throughout the episodes
+
+## Description
 This repository is a project made as an assignment in the Probability and Statistics course 2021/22 at UST AGH.
 
+## Language
 
+Polish
 ## Sources
 
 * [Dataset](https://www.kaggle.com/gopinath15/gameofthrones?select=game-of-thrones.csv])
