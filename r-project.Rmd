@@ -228,13 +228,14 @@ Wskaźniki:
 
 
 
-## Najczęstszy mówca na sezon
+## Najczęstszy mówca w danym sezonie
 
 
 ```{r}
 df <- dbGetQuery(con,"
 SELECT Speaker, COUNT(*)
-FROM [got-dialogues]")
+FROM [got-dialogues]
+ORDER ")
 ggplot(data=df, aes(x = df[,1], y=df[,2])) +
   geom_jitter(size = 0.1) +
   labs(x="", y="Długość kwestii [znaki]", caption="(Kropka odpowiada pojedynczemu dialogowi)") +
