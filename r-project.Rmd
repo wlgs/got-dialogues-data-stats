@@ -1,10 +1,12 @@
 ---
 title: "Analiza statystyczna danych dialogowych z serialu Gra o tron"
 author: "Mikołaj Wielgos"
+date: 20 stycznia 2022 r.
 email: wielgos@student.agh.edu.pl
 output:
-  pdf_document: default
-  html_notebook: default
+  pdf_document:
+    toc: true
+toc-title: "Spis treści"
 params:
   doc_title: "Analiza statystyczna danych dialogowych z serialu Gra o tron"
 ---
@@ -12,15 +14,18 @@ params:
 
 Projekt na przedmiot Rachunek prawdopodobieństwa i statystyka 2021/22. 
 
-Obejmuje on analizę statystyczną serialu *[Gra o tron](https://en.wikipedia.org/wiki/Game_of_Thrones)*
+Obejmuje on analizę statystyczną wszystkich kwestii bohaterów w serialu *[Gra o tron](https://en.wikipedia.org/wiki/Game_of_Thrones)*
 
 Źródło danych opracowywanych  *[www.kaggle.com/gopinath15/gameofthrones](https://www.kaggle.com/gopinath15/gameofthrones)*
 
-# Sekcja czyszczenia danych
+# Czyszczenie danych
 
 Importujemy pakiet DBI by łączyć się z bazą danych SQLite.
 ```{r}
 library(DBI)
+library(dbplot)
+library(dplyr)
+library(ggplot2)
 ```
 
 Łączymy się z bazą danych "got-dataset.db"
@@ -34,8 +39,8 @@ Sprawdzamy jakie tabele zawiera baza danych.
 dbListTables(con)
 ```
 
-
-Interesują nas dialogi wypowiedziane tylko przez postacie w serialu (wpis Speaker nie może być pusty).
+## Puste pola 'Speaker'
+Interesują nas kwestie wypowiedziane tylko przez postacie w serialu (wpis Speaker nie może być pusty).
 Przykładowy błędny wiersz
 ```{r}
 query <- "
@@ -56,8 +61,8 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
-
-Usuwamy dialogi postaci w tle, przedstawianych jako np. Woman #4
+## Kwestie postaci w tle
+Usuwamy kwestie postaci w tle, przedstawianych jako np. Woman #4
 Przykładowy błędny wiersz
 ```{r}
 query <- "
@@ -78,8 +83,8 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
-
-Usuwamy wspólne dialogi, dotyczy pozycji typu 'ALL TOGETHER', 'ALL THREE', 'ALL AT THE BACK'.
+## Wspólne kwestie
+Usuwamy wspólne kwestie, dotyczy pozycji typu 'ALL TOGETHER', 'ALL THREE', 'ALL AT THE BACK'.
 Przykładowy błędny wiersz
 ```{r}
 query <- "
@@ -100,7 +105,7 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
-
+## Nieznaczące wypowiedzi
 Usuwamy pojedyncze, mało znaczące wypowiedzi.
 Przykładowy błędny wiersz
 ```{r}
@@ -126,7 +131,7 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
-
+## Ujednolicenie pola 'Speaker'
 W bazie danych pojawiają się wpisy typu Speaker='Roose' oraz Speaker='ROOSE', dlatego trzymamy się jednej wersji (WIELKIE LITERY)
 ```{r}
 query <- "
@@ -137,7 +142,7 @@ dbGetRowsAffected(res)
 dbClearResult(res)
 ```
 
-
+## Podsumowanie i przykładowe dane
 Po przeczyszczeniu przykładowe wpisy w bazie wyglądają następująco (kolumna 'Text' ograniczona do 20 znaków, by zwiększyć czytelność).
 ```{r}
 query <- "
@@ -145,4 +150,101 @@ SELECT substr(Text,1,20)||'...' as 'Text', Speaker, Episode, Season
 FROM [got-dialogues]
 LIMIT 5"
 dbGetQuery(con, query)
+```
+
+# Analiza eksploracyjna
+
+## Ilość dialogów w poszczególnych sezonach
+```{r}
+df <- dbGetQuery(con,"
+SELECT Season, COUNT(*)
+FROM [got-dialogues]
+GROUP BY Season")
+ggplot(data=df, aes(x = df[,1], y=df[,2])) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = df[,2]), vjust = 1) +
+  labs(x="", y="Ilość dialogów") +
+  theme_classic()
+```
+
+Wskaźniki:
+
+* Średnia `r mean(df[,2])`
+* Mediana `r median(df[,2])`
+* Wariancja `r var(df[,2])` 
+* Odchylenie standardowe `r sd(df[,2])`
+
+
+## Ilość dialogów poszczególnych bohaterów (wszystkie sezony, 10 największych)
+
+
+```{r}
+df <- dbGetQuery(con,"
+SELECT Speaker, COUNT(*)
+FROM [got-dialogues]
+GROUP BY Speaker
+ORDER BY 2 DESC
+LIMIT 10")
+ggplot(data=df, aes(x = df[,1], y=df[,2])) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = df[,2]), vjust = 1) +
+  labs(x="", y="Ilość dialogów") +
+  theme_classic()
+```
+
+By policzyć wskaźniki wszystkich bohaterów, ponownie wybieram dane (tym razem bez limitu)
+```{r}
+df <- dbGetQuery(con,"
+SELECT Speaker, COUNT(*)
+FROM [got-dialogues]
+GROUP BY Speaker")
+```
+
+Wskaźniki (wszystkich bohaterów):
+
+* Średnia `r mean(df[,2])`
+* Mediana `r median(df[,2])`
+* Wariancja `r var(df[,2])` 
+* Odchylenie standardowe `r sd(df[,2])`
+
+## Długości kwestii (znaki) w poszczególnych sezonach
+
+
+```{r}
+df <- dbGetQuery(con,"
+SELECT Season,length(Text)
+FROM [got-dialogues]")
+ggplot(data=df, aes(x = df[,1], y=df[,2])) +
+  geom_jitter(size = 0.1) +
+  labs(x="", y="Długość kwestii [znaki]", caption="(Kropka odpowiada pojedynczemu dialogowi)") +
+  theme_classic()
+```
+Wskaźniki:
+
+* Średnia `r mean(df[,2])`
+* Mediana `r median(df[,2])`
+* Wariancja `r var(df[,2])` 
+* Odchylenie standardowe `r sd(df[,2])`
+
+
+
+## Najczęstszy mówca na sezon
+
+
+```{r}
+df <- dbGetQuery(con,"
+SELECT Speaker, COUNT(*)
+FROM [got-dialogues]")
+ggplot(data=df, aes(x = df[,1], y=df[,2])) +
+  geom_jitter(size = 0.1) +
+  labs(x="", y="Długość kwestii [znaki]", caption="(Kropka odpowiada pojedynczemu dialogowi)") +
+  theme_classic()
+```
+
+
+
+NA KONIEC \/ 
+```{r}
+dbDisconnect(con)
+unlink("data/got-dataset.db")
 ```
