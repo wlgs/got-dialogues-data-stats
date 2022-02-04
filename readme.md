@@ -1,5 +1,5 @@
 # Game of Thrones dialogues stats throughout the episodes
-Final result is available in pdf, notebook or R markdown file.
+Final result is available in pdf or R markdown file.
 * [pdf](output/got-dialogues-stats.pdf)
 * [R markdown](got-dialogues-stats.Rmd)
 ## Description
